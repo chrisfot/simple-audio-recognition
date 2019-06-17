@@ -8,3 +8,7 @@ local.properties
 android.iml
 .gradle/
 android/assets/*
+sar/free-spoken-digit-dataset
+sar/spectrograms/*/*.jpg
+sar/recordings/*
+!sar/recordings/.empty
