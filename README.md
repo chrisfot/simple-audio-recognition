@@ -1,20 +1,34 @@
 # Overview
 
-This repo contains code for the "TensorFlow for poets 2" series of codelabs.
+> This project was originally made as a university assignment and is being used for experimentation with Tensorflow and Python. It is not intended for production use under any circumstances.
 
-There are multiple versions of this codelab depending on which version 
-of the tensorflow libraries you plan on using:
+This is a Simple Audio Recognition system made using Python and Tensorflow and specifically built on top of [Tensorflow for Poets 2](https://codelabs.developers.google.com/codelabs/tensorflow-for-poets-2) Google CodeLab repository.
 
-* For [TensorFlow Lite](https://www.tensorflow.org/mobile/tflite/) the new, ground up rewrite targeted at mobile devices
-  use [this version of the codelab](https://codelabs.developers.google.com/codelabs/tensorflow-for-poets-2-tflite) 
-* For the more mature [TensorFlow Mobile](https://www.tensorflow.org/mobile/mobile_intro) use 
-  [this version of the codealab](https://codelabs.developers.google.com/codelabs/tensorflow-for-poets-2).
+It uses Tensorflow to train a neural network into recognizing digits 0-9 spoken in English. It has been trained using [a dataset](https://github.com/Jakobovski/free-spoken-digit-dataset) containing 2000 recordings of 4 different speakers. Then the user can record a sentence consisting of 4 to 10 words. The script will split the sentence into .wav files for each word and try to recognize each based on its training. Final output will indicate a list of possible answers and a match percentage, for each word. 
 
+## Setup
 
-This repo contains simplified and trimmed down version of tensorflow's example image classification apps.
+> Before you can run this a minimal setup is required.
 
-* The TensorFlow Lite version, in `android/tflite`, comes from [tensorflow/contrib/lite/](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite).
-* The Tensorflow Mobile version, in `android/tfmobile`, comes from [tensorflow/examples/android/](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android).
-
-The `scripts` directory contains helpers for the codelab. Some of these come from the main TensorFlow repository, and are included here so you can use them without also downloading the main TensorFlow repo (they are not part of the TensorFlow `pip` installation).
-
+Fetch the recordings dataset
+```
+cd sar
+```
+```
+git clone https://github.com/Jakobovski/free-spoken-digit-dataset
+```
+Generate spectrograms for the recordings
+```
+cd ..
+```
+```
+python ./sar/spectrograms.py
+```
+Retrain Tensorflow
+```
+python -m scripts.retrain --bottleneck_dir=tf_files/bottlenecks --how_many_training_steps=2000 --model_dir=tf_files/models --summaries_dir=tf_files/training_summaries/mobilenet_1.0_224 --output_graph=tf_files/retrained_graph.pb --output_labels=tf_files/retrained_labels.txt --architecture="mobilenet_1.0_224" --image_dir=sar/spectrograms
+```
+Now you can run the project!
+```
+python ./sar/record.py
+```
